@@ -24,22 +24,36 @@
         <p class="text-center">Perbandingan Anggaran Pendapatan dan Belanja Desa Sabala Tahun 2022, 2023, dan 2024</p>
 
         <!-- Grafik All -->
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mt-4 pt-4">
             <div class="col-12 col-lg-10">
                 <div id="all" class="echart-container"></div>
             </div>
         </div>
 
         <!-- Grafik Pendapatan -->
-        <div class="row justify-content-center mt-4">
+        <div class="row justify-content-center mt-4 pt-4">
             <div class="col-12 col-lg-10">
                 <div id="pendapatanChart" class="echart-container"></div>
             </div>
         </div>
+
+        <!-- Grafik Belanja Desa -->
+        <div class="row justify-content-center mt-4 pt-4">
+            <div class="col-12 col-lg-10">
+                <div id="belanjaChart" class="echart-container"></div>
+            </div>
+        </div>
+
+        <!-- Grafik Pembiayaan -->
+        <div class="row justify-content-center mt-4 pt-4">
+            <div class="col-12 col-lg-10">
+                <div id="pembiayaanChart" class="echart-container"></div>
+            </div>
+        </div>
     </div>
 
+
     <!-- ECharts -->
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.0.0/dist/echarts.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const data = @json($data); // Data dari Controller
@@ -143,7 +157,134 @@
             renderPendapatanChart();
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const belanjaData = @json($belanja); // Data Belanja Desa dari Controller
+            const categories = Object.keys(belanjaData); // Kategori Belanja Desa
+            const values = Object.values(belanjaData); // Nilai Belanja Desa
 
+            // Inisialisasi ECharts
+            const chart = echarts.init(document.getElementById('belanjaChart'));
+
+            // Opsi Grafik
+            chart.setOption({
+                title: {
+                    text: 'Belanja Desa Tahun 2024',
+                    left: 'left',
+                    textStyle: {
+                        fontWeight: 'bold',
+                        fontSize: 18
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow' // Highlight shadow pada batang
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: categories,
+                    axisLabel: {
+                        rotate: 25, // Rotasi label agar tidak tumpang tindih
+                        fontSize: 12
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        formatter: '{value} Rp'
+                    }
+                },
+                series: [{
+                    name: 'Belanja Desa',
+                    type: 'bar',
+                    data: values,
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: function(params) {
+                            return new Intl.NumberFormat('id-ID', {
+                                style: 'currency',
+                                currency: 'IDR'
+                            }).format(params.value);
+                        }
+                    },
+                    itemStyle: {
+                        color: '#006BFF' // Warna merah muda batang
+                    },
+                    barWidth: '50%' // Ukuran batang
+                }]
+            });
+
+            // Responsif untuk resize layar
+            window.addEventListener('resize', chart.resize);
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const pembiayaanData = @json($pembiayaan); // Data Pembiayaan dari Controller
+            const categories = Object.keys(pembiayaanData); // Penerimaan dan Pengeluaran
+            const values = Object.values(pembiayaanData); // Nilai masing-masing kategori
+
+            // Inisialisasi ECharts
+            const chart = echarts.init(document.getElementById('pembiayaanChart'));
+
+            // Opsi Grafik
+            chart.setOption({
+                title: {
+                    text: 'Pembiayaan Desa Tahun 2024',
+                    left: 'left',
+                    textStyle: {
+                        fontWeight: 'bold',
+                        fontSize: 18
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow' // Highlight shadow pada batang
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: categories,
+                    axisLabel: {
+                        fontSize: 12
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        formatter: '{value} Rp'
+                    }
+                },
+                series: [{
+                    name: 'Pembiayaan Desa',
+                    type: 'bar',
+                    data: values,
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: function(params) {
+                            return new Intl.NumberFormat('id-ID', {
+                                style: 'currency',
+                                currency: 'IDR'
+                            }).format(params.value);
+                        }
+                    },
+                    itemStyle: {
+                        color: '#006BFF' // Warna merah batang
+                    },
+                    barWidth: '50%' // Ukuran batang
+                }]
+            });
+
+            // Responsif untuk resize layar
+            window.addEventListener('resize', chart.resize);
+        });
+    </script>
     <style>
         .echart-container {
             width: 100%;

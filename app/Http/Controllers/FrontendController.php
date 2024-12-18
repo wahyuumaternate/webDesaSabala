@@ -86,6 +86,20 @@ class FrontendController extends Controller
             'Pendapatan Lain-lain' => 0
         ];
 
-        return view('pages.apbdes.index', compact('data','pendapatan'));
+        // Data Belanja Desa Tahun 2024
+        $belanja = [
+            'Penyelenggaraan Pemerintahan Desa' => 2004886353,
+            'Pelaksanaan Pembangunan Desa' => 2158774559,
+            'Pembinaan Kemasyarakatan Desa' => 495161766,
+            'Pemberdayaan Masyarakat Desa' => 35000000,
+            'Penanggulangan Bencana, Keadaan Darurat, dan Mendesak' => 194400000
+        ];
+
+        $pembiayaan = [
+            'Penerimaan' => 86016878,
+            'Pengeluaran' => 0
+        ];
+
+        return view('pages.apbdes.index', compact('data','pendapatan','belanja','pembiayaan'));
     }
 }
