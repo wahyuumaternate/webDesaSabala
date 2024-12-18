@@ -106,7 +106,7 @@
     <!-- Tombol Pengaduan dengan Ikon Chat -->
     <a href="{{ route('pengaduan') }}" id="btnPengaduan" class="btn-pengaduan d-flex align-items-center">
         <!-- Gambar Ikon WhatsApp -->
-        <img src="{{ asset('assets/img/headset-solid.svg') }}" alt="pengaduan" class="chat-icon" width="50">
+        <img src="{{ asset('assets/img/headset-solid.svg') }}" alt="pengaduan" class="chat-icon" width="20">
         <h6 class="text-dark"></h6> <!-- Memberikan jarak antara gambar dan teks -->
     </a>
 
