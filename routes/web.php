@@ -184,6 +184,8 @@ Route::get('/pengaduan', [PengaduanController::class, 'frontEnd'])->name('pengad
 Route::post('/pengaduan', [PengaduanController::class, 'store'])->name('pengaduan.store');
 Route::get('/reload', [PengaduanController::class, 'reload']);
 
+Route::get('/apbdes', [FrontendController::class, 'apbdes'])->name('apbdes');
+
 // profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile-user', [ProfileController::class, 'edit'])->name('profile.edit');

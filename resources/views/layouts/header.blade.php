@@ -41,8 +41,8 @@
                         href="{{ route('pelayanan') }}">Pelayanan</a></li>
                 <li><a class="{{ Request::is('berita') ? 'active' : '' }}" href="{{ route('berita') }}">Berita</a>
                 </li>
-                <li><a class="{{ Request::is('pengaduan') ? 'active' : '' }}"
-                        href="{{ route('pengaduan') }}">APBDes</a></li>
+                <li><a class="{{ Request::is('apbdes') ? 'active' : '' }}" href="{{ route('apbdes') }}">APBDes</a>
+                </li>
                 <li><a class="{{ Request::is('peta') ? 'active' : '' }}" href="{{ route('peta') }}">Peta
                         Desa</a></li>
                 @auth('masyarakat')

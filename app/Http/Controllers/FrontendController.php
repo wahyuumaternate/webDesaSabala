@@ -63,4 +63,29 @@ class FrontendController extends Controller
             'gambaranumum'=> GambaranUmum::all()
         ]);
     }
+    public function apbdes()
+    {
+        // Data APBDes untuk 2022, 2023, dan 2024
+        $data = [
+            'pendapatan' => [
+                '2022' => 4500000000,
+                '2023' => 4700000000,
+                '2024' => 4802205800
+            ],
+            'belanja' => [
+                '2022' => 4600000000,
+                '2023' => 4700000000,
+                '2024' => 4888222678
+            ]
+        ];
+
+        // Data Pendapatan Desa 2024
+        $pendapatan = [
+            'Pendapatan Asli Desa' => 2802205800,
+            'Pendapatan Transfer' => 4802205800,
+            'Pendapatan Lain-lain' => 0
+        ];
+
+        return view('pages.apbdes.index', compact('data','pendapatan'));
+    }
 }
