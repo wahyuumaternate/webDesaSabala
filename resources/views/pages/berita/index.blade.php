@@ -12,7 +12,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <ol>
                 <li><a href="/">Beranda</a></li>
-                <li>Berita Kelurahan</li>
+                <li>Berita Desa</li>
             </ol>
         </div>
 

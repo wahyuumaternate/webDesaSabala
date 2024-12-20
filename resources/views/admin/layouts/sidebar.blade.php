@@ -24,12 +24,20 @@
             <li class="nav-item dropdown">
                 <a href="#berita" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
                     <i class="fe fe-grid fe-16"></i>
-                    <span class="ml-3 item-text">Berita</span>
+                    <span class="ml-3 item-text">Publikasi</span>
                 </a>
                 <ul class="collapse list-unstyled pl-4 w-100" id="berita">
                     <li class="nav-item">
-                        <a class="nav-link pl-3" href="{{ route('berita.index') }}"><span class="ml-1 item-text">Semua
+                        <a class="nav-link pl-3" href="{{ route('berita.index') }}"><span class="ml-1 item-text">
                                 Berita</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link pl-3" href="{{ route('galeris.index') }}"><span
+                                class="ml-1 item-text">Galeri</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link pl-3" href="{{ route('videos.index') }}"><span
+                                class="ml-1 item-text">Vidio</span></a>
                     </li>
                     {{-- <li class="nav-item">
                         <a class="nav-link pl-3" href="{{ route('berita.tambah') }}"><span class="ml-1 item-text">Tambah Berita</span></a>
@@ -102,7 +110,8 @@
         @can('isAdmin')
             <ul class="navbar-nav flex-fill w-100 mb-2">
                 <li class="nav-item  dropdown">
-                    <a href="#profil-Desa" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+                    <a href="#profil-Desa" data-toggle="collapse" aria-expanded="false"
+                        class="dropdown-toggle nav-link">
                         <i class="fe fe-book fe-16"></i>
                         <span class="ml-3 item-text">Profil Desa</span>
                     </a>

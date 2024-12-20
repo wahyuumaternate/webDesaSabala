@@ -39,7 +39,16 @@
                 </li>
                 <li><a class="{{ Request::is('pelayanan') ? 'active' : '' }}"
                         href="{{ route('pelayanan') }}">Pelayanan</a></li>
-                <li><a class="{{ Request::is('berita') ? 'active' : '' }}" href="{{ route('berita') }}">Berita</a>
+                {{-- <li><a class="{{ Request::is('berita') ? 'active' : '' }}" href="{{ route('berita') }}">Berita</a>
+                </li> --}}
+                <li class="dropdown"><a class="{{ Request::is('d*') ? 'active' : '' }}"
+                        href="{{ route('jenis_kelamin') }}"><span>Publikasi</span> <i
+                            class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a href="{{ route('berita') }}">Berita</a></li>
+                        <li><a href="{{ route('galeri') }}">Galeri</a></li>
+                        <li><a href="{{ route('video') }}">Video</a></li>
+                    </ul>
                 </li>
                 <li><a class="{{ Request::is('apbdes') ? 'active' : '' }}" href="{{ route('apbdes') }}">APBDes</a>
                 </li>

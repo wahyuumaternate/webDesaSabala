@@ -91,6 +91,25 @@
             background-color: #006BFF;
             /* Efek hover, warna sedikit lebih gelap */
         }
+
+        .modal {
+            z-index: 999999999;
+            /* Pastikan nilai ini cukup tinggi */
+        }
+
+        .gallery-item {
+            overflow: hidden;
+            /* memastikan gambar yang lebih besar dari ukuran kontainer tidak tampil */
+        }
+
+        .gallery-img {
+            width: 100%;
+            /* Buat agar gambar memenuhi lebar kontainer */
+            height: 200px;
+            /* Sesuaikan tinggi gambar */
+            object-fit: cover;
+            /* Memastikan gambar terpotong tetapi tidak terdistorsi */
+        }
     </style>
 </head>
 

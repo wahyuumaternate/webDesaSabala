@@ -6,12 +6,14 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DatapendudukController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\GambaranUmumController;
 use App\Http\Controllers\PekerjaanPendidikanController;
 use App\Http\Controllers\PendapatanController;
 use App\Http\Controllers\PengaduanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SambutanLurahController;
+use App\Http\Controllers\VideoController;
 use App\Http\Controllers\VisiMisiController;
 use App\Http\Controllers\SejarahController;
 use App\Http\Controllers\StatistikController;
@@ -116,7 +118,9 @@ Route::prefix('administrator/dashboard')->middleware('auth:web')->group(function
     Route::get('/berita/{berita:slug}/edit-berita', [BeritaController::class, 'edit'])->name('berita.edit');
     Route::put('/berita/{berita:slug}/edit-berita', [BeritaController::class, 'update'])->name('berita.update');
     Route::delete('/berita/{berita:slug}', [BeritaController::class, 'destroy'])->name('berita.delete');
-
+    Route::resource('galeris', GaleriController::class);
+    Route::resource('videos', VideoController::class);
+    Route::resource('gallery', GaleriController::class);
     // sambutan Lurah
     Route::get('/sambutan-kepala-desa', [SambutanLurahController::class, 'edit'])->name('lurah.index');
     Route::post('/sambutan-lurah', [SambutanLurahController::class, 'store'])->name('lurah.store');
@@ -157,10 +161,13 @@ Route::prefix('profil')->group(function () {
 });
 
 // Berita Routes
-Route::prefix('berita')->group(function () {
-    Route::get('/', [FrontendController::class, 'berita'])->name('berita');
+Route::prefix('publikasi')->group(function () {
+    Route::get('/berita', [FrontendController::class, 'berita'])->name('berita');
     Route::get('{berita:slug}/detail', [FrontendController::class, 'detailberita'])->name('detail.berita');
     Route::get('/sambutan-lurah/{sambutanLurah:slug}/detail', [FrontendController::class, 'sambutanlurah'])->name('sambutanlurah');
+
+    Route::get('/galeri', [GaleriController::class, 'front'])->name('galeri');
+    Route::get('/video', [VideoController::class, 'front'])->name('video');
 });
 
 // Statistik Routes
