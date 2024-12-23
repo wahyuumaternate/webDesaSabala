@@ -11,7 +11,7 @@ class GaleriController extends Controller
 {
     public function index()
     {
-        $galleries = Galeri::all();
+        $galleries = Galeri::latest()->get();
         return view('admin.publikasi.galeri', compact('galleries'));
     }
 
@@ -55,7 +55,7 @@ class GaleriController extends Controller
 
     public function front()
     {
-        $galleries = Galeri::all(); // Ambil semua item galeri
+        $galleries = Galeri::latest()->get(); // Ambil semua item galeri
 
         return view('pages.publikasi.galeri', compact('galleries'));
     }

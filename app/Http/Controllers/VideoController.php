@@ -10,7 +10,7 @@ class VideoController extends Controller
 {
     public function index()
     {
-        $videos = Video::all();
+        $videos = Video::latest()->get();
         return view('admin.publikasi.video', compact('videos'));
     }
 
@@ -54,7 +54,7 @@ class VideoController extends Controller
 
     public function front()
     {
-        $videos = Video::all(); // Ambil semua data video
+        $videos = Video::latest()->get(); // Ambil semua data video
         return view('pages.publikasi.video', compact('videos'));
     }
 }
