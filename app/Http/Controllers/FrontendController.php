@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Belanja;
 use App\Models\Berita;
 use App\Models\GambaranUmum;
+use App\Models\Pembiayaan;
+use App\Models\Pembiyayaan;
+use App\Models\Pendapatan;
 use App\Models\SambutanLurah;
 use App\Models\Sejarah;
 use App\Models\StrukturOrganisasi;
@@ -63,43 +67,42 @@ class FrontendController extends Controller
             'gambaranumum'=> GambaranUmum::all()
         ]);
     }
+
     public function apbdes()
     {
-        // Data APBDes untuk 2022, 2023, dan 2024
+        // Ambil semua tahun unik dari Pendapatan
+        $years = Pendapatan::select(DB::raw('YEAR(created_at) as year'))
+                ->distinct()
+                ->pluck('year');
+    
+        // Mendapatkan tahun saat ini
+        $currentYear = date('Y');
+        // Mengatur tahun yang ingin ditampilkan
+        $yearsArray = [
+            $currentYear - 2, // Tahun sekarang - 2
+            $currentYear - 1, // Tahun sekarang - 1
+            $currentYear      // Tahun sekarang
+        ];
+    
+        // Ambil data untuk tahun yang dipilih
+        $pendapatan = Pendapatan::select(DB::raw('SUM(jumlah) as total'), DB::raw('YEAR(created_at) as year'))
+            ->groupBy('year')
+            ->pluck('total', 'year');
+    
+        $belanja = Belanja::select(DB::raw('SUM(jumlah) as total'), DB::raw('YEAR(created_at) as year'))
+            ->groupBy('year')
+            ->pluck('total', 'year');
+    
+        // Mengambil data pembiayaan
+        $pembiayaan = Pembiayaan::select('kategori_pembiayaan', 'jumlah')->get();
+    
+        // Data APBDes untuk tahun yang ditentukan
         $data = [
-            'pendapatan' => [
-                '2022' => 4500000000,
-                '2023' => 4700000000,
-                '2024' => 4802205800
-            ],
-            'belanja' => [
-                '2022' => 4600000000,
-                '2023' => 4700000000,
-                '2024' => 4888222678
-            ]
+            'pendapatan' => $pendapatan,
+            'belanja' => $belanja
         ];
-
-        // Data Pendapatan Desa 2024
-        $pendapatan = [
-            'Pendapatan Asli Desa' => 2802205800,
-            'Pendapatan Transfer' => 4802205800,
-            'Pendapatan Lain-lain' => 0
-        ];
-
-        // Data Belanja Desa Tahun 2024
-        $belanja = [
-            'Penyelenggaraan Pemerintahan Desa' => 2004886353,
-            'Pelaksanaan Pembangunan Desa' => 2158774559,
-            'Pembinaan Kemasyarakatan Desa' => 495161766,
-            'Pemberdayaan Masyarakat Desa' => 35000000,
-            'Penanggulangan Bencana, Keadaan Darurat, dan Mendesak' => 194400000
-        ];
-
-        $pembiayaan = [
-            'Penerimaan' => 86016878,
-            'Pengeluaran' => 0
-        ];
-
-        return view('pages.apbdes.index', compact('data','pendapatan','belanja','pembiayaan'));
+    
+        return view('pages.apbdes.index', compact('data', 'pendapatan', 'belanja', 'pembiayaan', 'years'));
     }
+
 }
