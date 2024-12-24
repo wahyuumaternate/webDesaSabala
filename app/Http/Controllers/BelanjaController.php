@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Belanja; // Pastikan model Belanja ada
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class BelanjaController extends Controller
 {
@@ -23,7 +24,17 @@ class BelanjaController extends Controller
         
         // Validasi inputan
         $request->validate([
-            'kategori_belanja' => 'required|string|max:255',
+            'kategori_belanja' => [
+        'required',
+        'string',
+                Rule::in([
+                    'Penyelenggaraan Pemerintahan Desa',
+                    'Pelaksanaan Pembangunan Desa',
+                    'Pembinaan Kemasyarakatan Desa',
+                    'Pemberdayaan Masyarakat Desa',
+                    'Penanggulangan Bencana, Keadaan Darurat, dan Keadaan Mendesak Desa'
+                ])
+            ],
             'jumlah' => 'required|numeric',  // Validasi sebagai angka
             'uraian' => 'nullable|string',
         ]);

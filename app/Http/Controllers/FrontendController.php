@@ -7,6 +7,7 @@ use App\Models\Berita;
 use App\Models\GambaranUmum;
 use App\Models\Pembiayaan;
 use App\Models\Pembiyayaan;
+use App\Models\Pemuda;
 use App\Models\Pendapatan;
 use App\Models\SambutanLurah;
 use App\Models\Sejarah;
@@ -55,6 +56,12 @@ class FrontendController extends Controller
                 'struktur' => StrukturOrganisasi::all(),
             ]);
     }
+    public function strukturorganisasiPemuda() {
+            
+            return view('pages.profil_kelurahan.strukturorganisasiPemuda',[
+                'struktur' => Pemuda::all(),
+            ]);
+    }
 
     public function sejarah() {
         return view('pages.profil_kelurahan.sejarah',[
@@ -69,40 +76,48 @@ class FrontendController extends Controller
     }
 
     public function apbdes()
-    {
-        // Ambil semua tahun unik dari Pendapatan
-        $years = Pendapatan::select(DB::raw('YEAR(created_at) as year'))
-                ->distinct()
-                ->pluck('year');
+{
+    // Ambil semua tahun unik dari Pendapatan
+    $years = Pendapatan::select(DB::raw('YEAR(created_at) as year'))
+            ->distinct()
+            ->pluck('year');
     
-        // Mendapatkan tahun saat ini
-        $currentYear = date('Y');
-        // Mengatur tahun yang ingin ditampilkan
-        $yearsArray = [
-            $currentYear - 2, // Tahun sekarang - 2
-            $currentYear - 1, // Tahun sekarang - 1
-            $currentYear      // Tahun sekarang
-        ];
+    // Mendapatkan tahun saat ini
+    $currentYear = date('Y');
+    $yearsArray = [
+        $currentYear - 2, // Tahun sekarang - 2
+        $currentYear - 1, // Tahun sekarang - 1
+        $currentYear      // Tahun sekarang
+    ];
     
-        // Ambil data untuk tahun yang dipilih
-        $pendapatan = Pendapatan::select(DB::raw('SUM(jumlah) as total'), DB::raw('YEAR(created_at) as year'))
-            ->groupBy('year')
-            ->pluck('total', 'year');
-    
-        $belanja = Belanja::select(DB::raw('SUM(jumlah) as total'), DB::raw('YEAR(created_at) as year'))
-            ->groupBy('year')
-            ->pluck('total', 'year');
-    
-        // Mengambil data pembiayaan
-        $pembiayaan = Pembiayaan::select('kategori_pembiayaan', 'jumlah')->get();
-    
-        // Data APBDes untuk tahun yang ditentukan
-        $data = [
-            'pendapatan' => $pendapatan,
-            'belanja' => $belanja
-        ];
-    
-        return view('pages.apbdes.index', compact('data', 'pendapatan', 'belanja', 'pembiayaan', 'years'));
-    }
+    // Data Pendapatan dengan format [kategori_pendapatan => total]
+    $pendapatan = Pendapatan::select('kategori_pendapatan', DB::raw('SUM(jumlah) as total'))
+        ->groupBy('kategori_pendapatan')
+        ->pluck('total', 'kategori_pendapatan'); // Format: [kategori_pendapatan => total]
+
+    // Data Belanja dengan format [kategori_belanja => total]
+    $belanja = DB::table('belanja')
+        ->select('kategori_belanja', DB::raw('SUM(jumlah) as total'))
+        ->groupBy('kategori_belanja')
+        ->pluck('total', 'kategori_belanja'); // Format: [kategori_belanja => total]
+
+    // Data Pembiayaan (array objek)
+    $pembiayaan = Pembiayaan::select('kategori_pembiayaan', 'jumlah')->get();
+
+    // Ambil data Pendapatan per tahun
+    $pendapatanYear = Pendapatan::select(DB::raw('YEAR(created_at) as year'), DB::raw('SUM(jumlah) as total'))
+        ->groupBy('year')
+        ->pluck('total', 'year'); // Format: [2024 => total, 2025 => total]
+
+    // Ambil data Belanja per tahun
+    $belanjaYear = DB::table('belanja')
+        ->select(DB::raw('YEAR(created_at) as year'), DB::raw('SUM(jumlah) as total'))
+        ->groupBy('year')
+        ->pluck('total', 'year'); // Format: [2024 => total, 2025 => total]
+
+    // Data APBDes untuk tahun yang ditentukan
+    return view('pages.apbdes.index', compact('pendapatan', 'belanja', 'pembiayaan', 'years','belanjaYear','pendapatanYear'));
+}
+
 
 }

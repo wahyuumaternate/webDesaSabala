@@ -1,16 +1,16 @@
 {{--  --}}
-@extends('admin.layouts.main', ['title' => 'Struktur Organisasi Desa'])
+@extends('admin.layouts.main', ['title' => 'Struktur Organisasi Pemuda'])
 @section('headerside')
     @include('admin.layouts.header')
     @include('admin.layouts.sidebar')
 @endsection
 @section('content')
-    <h2 class="mb-2 page-title"><i class="fe fe-file-plus"></i> Struktur Organisasi Desa</h2>
+    <h2 class="mb-2 page-title"><i class="fe fe-file-plus"></i> Struktur Organisasi Pemuda</h2>
     <div class="card shadow mb-4">
 
         @if ($struktur_organisasi->count())
             @foreach ($struktur_organisasi as $so)
-                <form action="{{ route('organisasi.update', $so->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('strukturorganisasiPemuda.update', $so->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('put')
                     <div class="card-header">
@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-md-12">
                         <div class="card-body">
-                            <h5 class="card-title">Struktur Organisasi Desa</h5>
+                            <h5 class="card-title">Struktur Organisasi Pemuda</h5>
                             <div class="form-group mb-3">
                                 <label for="example-fileinput">Bagan:</label>
                                 <input type="file" id="fileinput"

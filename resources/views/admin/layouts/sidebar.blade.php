@@ -128,13 +128,17 @@
                             <a class="nav-link pl-3" href="{{ route('gambaranumum.index') }}"><span
                                     class="ml-1 item-text">Gambaran Umum</span></a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link pl-3" href="{{ route('organisasi.index') }}"><span
-                                    class="ml-1 item-text">Struktur
-                                    Organisasi</span></a>
-                        </li>
-                    </ul>
+                        <a class="nav-link pl-3" href="{{ route('organisasi.index') }}"><span
+                                class="ml-1 item-text">Struktur
+                                Organisasi Desa</span></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link pl-3" href="{{ route('strukturorganisasiPemuda.index') }}"><span
+                            class="ml-1 item-text">Struktur
+                            Organisasi Pemuda</span></a>
+                </li>
+            </ul>
+            </li>
             </ul>
             <ul class="navbar-nav flex-fill w-100 mb-2">
                 <li class="nav-item  dropdown">

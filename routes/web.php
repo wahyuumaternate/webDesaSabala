@@ -22,6 +22,7 @@ use App\Http\Controllers\infoKelurahanController;
 use App\Http\Controllers\JenisPelayananController;
 use App\Http\Controllers\MasyarakatController;
 use App\Http\Controllers\PelayananController;
+use App\Http\Controllers\PemudaController;
 use App\Http\Controllers\PetaController;
 use Illuminate\Support\Facades\Route;
 
@@ -81,6 +82,10 @@ Route::prefix('administrator/dashboard')->middleware(['auth:web', 'is_admin'])->
     Route::get('/profil-kelurahan/struktur-organisasi', [StrukturOrganisasiController::class, 'index'])->name('organisasi.index');
     Route::post('/profil-kelurahan/tambah-struktur-organisasi/store', [StrukturOrganisasiController::class, 'store'])->name('organisasi.store');
     Route::put('/profil-kelurahan/{struktur_organisasi:id}/edit-struktur-organisasi', [StrukturOrganisasiController::class, 'update'])->name('organisasi.update');
+    //struktur organisani
+    Route::get('/profil-kelurahan/struktur-organisasi-pemuda', [PemudaController::class, 'index'])->name('strukturorganisasiPemuda.index');
+    Route::post('/profil-kelurahan/tambah-struktur-organisasi-pemuda/store', [PemudaController::class, 'store'])->name('strukturorganisasiPemuda.store');
+    Route::put('/profil-kelurahan/{struktur_organisasi:id}/edit-struktur-organisasi-pemuda', [PemudaController::class, 'update'])->name('strukturorganisasiPemuda.update');
     // pekerjaan & pendidikan
     Route::get('kependudukan/pekerjaan', [PekerjaanPendidikanController::class, 'pekerjaan'])->name('pekerjaan.index');
     Route::get('kependudukan/pendidikan', [PekerjaanPendidikanController::class, 'pendidikan'])->name('pendidikan.index');
@@ -158,6 +163,7 @@ Route::prefix('profil')->group(function () {
 
     Route::get('/sejarah', [FrontendController::class, 'sejarah'])->name('sejarah');
     Route::get('/struktur-organisasi', [FrontendController::class, 'struktur_organisasi'])->name('struktur.organisasi');
+    Route::get('/struktur-organisasi-pemuda', [FrontendController::class, 'strukturorganisasiPemuda'])->name('strukturorganisasiPemuda.organisasi');
 });
 
 // Berita Routes

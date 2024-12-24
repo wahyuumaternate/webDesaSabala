@@ -21,7 +21,9 @@
                         <li><a href="{{ route('visimisi') }}">Visi & Misi</a></li>
                         <li><a href="{{ route('sejarah') }}">Sejarah</a></li>
                         <li><a href="{{ route('gambaran.umum') }}">Gambaran Umum</a></li>
-                        <li><a href="{{ route('struktur.organisasi') }}">Struktur Organisasi</a></li>
+                        <li><a href="{{ route('struktur.organisasi') }}">Struktur Organisasi Desa</a></li>
+                        <li><a href="{{ route('strukturorganisasiPemuda.organisasi') }}">Struktur Organisasi Pemuda</a>
+                        </li>
                     </ul>
                 </li>
 

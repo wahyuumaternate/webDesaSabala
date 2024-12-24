@@ -13,7 +13,7 @@ class Belanja extends Model
 
     // Tentukan kolom yang dapat diisi (mass assignment)
     protected $fillable = [
-        'kategori_pendapatan', // Kategori pendapatan (e.g., Pendapatan Asli Desa)
+        'kategori_belanja', // Kategori pendapatan (e.g., Pendapatan Asli Desa)
         'jumlah',              // Jumlah pendapatan
         'uraian',              // Deskripsi pendapatan
     ];

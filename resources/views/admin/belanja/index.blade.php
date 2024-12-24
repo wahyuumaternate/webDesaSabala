@@ -51,10 +51,9 @@
                                                                     Penanggulangan Bencana, Keadaan Darurat, dan Keadaan
                                                                     Mendesak Desa</option>
                                                             </select>
-
                                                             @error('kategori_belanja')
                                                                 <span class="invalid-feedback" role="alert">
-                                                                    <strong class="text-danger">{{ $message }}</strong>
+                                                                    <strong>{{ $message }}</strong>
                                                                 </span>
                                                             @enderror
                                                         </div>
