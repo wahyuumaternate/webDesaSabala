@@ -19,9 +19,6 @@ class Pendapatan extends Model
         'uraian',              // Deskripsi pendapatan
     ];
 
-    // Jika Anda ingin menggunakan timestamps secara eksplisit
-    public $timestamps = false; // By default this is true, but it's here for clarity
-
     // Jika Anda ingin memformat kolom 'jumlah' dengan format tertentu, misalnya:
     protected $casts = [
         'jumlah' => 'decimal:2',

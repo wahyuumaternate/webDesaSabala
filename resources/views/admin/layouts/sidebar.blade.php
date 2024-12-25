@@ -179,8 +179,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link pl-3" href="{{ route('jenis_pelayanan.index') }}">
-                                <span class="ml-1 item-text">Pembiyayaan</span>
+                            <a class="nav-link pl-3" href="{{ route('pembiayaan.index') }}">
+                                <span class="ml-1 item-text">pembiayaan</span>
                             </a>
                         </li>
                     </ul>

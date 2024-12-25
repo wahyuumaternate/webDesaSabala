@@ -76,48 +76,130 @@ class FrontendController extends Controller
     }
 
     public function apbdes()
-{
-    // Ambil semua tahun unik dari Pendapatan
-    $years = Pendapatan::select(DB::raw('YEAR(created_at) as year'))
-            ->distinct()
-            ->pluck('year');
+    {
+        $currentYear = date('Y');
     
-    // Mendapatkan tahun saat ini
-    $currentYear = date('Y');
-    $yearsArray = [
-        $currentYear - 2, // Tahun sekarang - 2
-        $currentYear - 1, // Tahun sekarang - 1
-        $currentYear      // Tahun sekarang
-    ];
+        // Fetch years from pendapatan and belanja
+        $pendapatanYear = Pendapatan::select(DB::raw('YEAR(created_at) as year'), DB::raw('SUM(jumlah) as total'))
+            ->groupBy('year')
+            ->pluck('total', 'year'); // Format: [2022 => total, 2023 => total]
     
-    // Data Pendapatan dengan format [kategori_pendapatan => total]
-    $pendapatan = Pendapatan::select('kategori_pendapatan', DB::raw('SUM(jumlah) as total'))
-        ->groupBy('kategori_pendapatan')
-        ->pluck('total', 'kategori_pendapatan'); // Format: [kategori_pendapatan => total]
+        $belanjaYear = DB::table('belanja')
+            ->select(DB::raw('YEAR(created_at) as year'), DB::raw('SUM(jumlah) as total'))
+            ->groupBy('year')
+            ->pluck('total', 'year'); // Format: [2022 => total, 2023 => total]
+    
+        // Combine unique years from pendapatan and belanja
+        $years = array_unique(array_merge($pendapatanYear->keys()->toArray(), $belanjaYear->keys()->toArray()));
+        sort($years); // Sort years in ascending order
+    
+        // Prepare yearly pendapatan values for chart
+        $pendapatanValuesByYear = array_map(function ($year) use ($pendapatanYear) {
+            return $pendapatanYear[$year] ?? 0; // Return 0 if no data exists for a year
+        }, $years);
+    
+        // Prepare yearly belanja values for chart
+        $belanjaValuesByYear = array_map(function ($year) use ($belanjaYear) {
+            return $belanjaYear[$year] ?? 0; // Return 0 if no data exists for a year
+        }, $years);
+    
+        // Fetch data for the current year
+        $pendapatan = Pendapatan::select('kategori_pendapatan', DB::raw('SUM(jumlah) as total'))
+            ->whereYear('created_at', $currentYear)
+            ->groupBy('kategori_pendapatan')
+            ->pluck('total', 'kategori_pendapatan'); // Format: [kategori_pendapatan => total]
+    
+        $belanja = DB::table('belanja')
+            ->select('kategori_belanja', DB::raw('SUM(jumlah) as total'))
+            ->whereYear('created_at', $currentYear)
+            ->groupBy('kategori_belanja')
+            ->pluck('total', 'kategori_belanja'); // Format: [kategori_belanja => total]
+    
+        $pembiayaan = Pembiayaan::whereYear('created_at', $currentYear)
+            ->select('kategori_pembiayaan', 'jumlah')
+            ->get();
+    
+        // Calculate totals for the current year
+        $totalPendapatan = $pendapatan->sum();
+        $totalBelanja = $belanja->sum();
+        $surplusDefisit = $totalPendapatan - $totalBelanja;
+        $penerimaan = $pembiayaan->where('kategori_pembiayaan', 'Penerimaan')->sum('jumlah');
+        $pengeluaran = $pembiayaan->where('kategori_pembiayaan', 'Pengeluaran')->sum('jumlah');
+    
+        // Pass all required data to the view
+        return view('pages.apbdes.index', compact(
+            'pendapatan',
+            'belanja',
+            'pembiayaan',
+            'years',
+            'pendapatanValuesByYear',
+            'belanjaValuesByYear',
+            'totalPendapatan',
+            'totalBelanja',
+            'surplusDefisit',
+            'penerimaan',
+            'pengeluaran'
+        ));
+    }
+    
 
-    // Data Belanja dengan format [kategori_belanja => total]
+public function getDataByYear(Request $request)
+{
+    // Get the requested year
+    $year = $request->query('year', date('Y'));
+
+    // Fetch pendapatan data for the selected year
+    $pendapatan = Pendapatan::select('kategori_pendapatan', DB::raw('SUM(jumlah) as total'))
+        ->whereYear('created_at', $year)
+        ->groupBy('kategori_pendapatan')
+        ->get()
+        ->map(function($item) {
+            return [
+                'kategori' => $item->kategori_pendapatan,
+                'total' => $item->total
+            ];
+        });
+
+    // Fetch belanja data for the selected year
     $belanja = DB::table('belanja')
         ->select('kategori_belanja', DB::raw('SUM(jumlah) as total'))
+        ->whereYear('created_at', $year)
         ->groupBy('kategori_belanja')
-        ->pluck('total', 'kategori_belanja'); // Format: [kategori_belanja => total]
+        ->get()
+        ->map(function($item) {
+            return [
+                'kategori' => $item->kategori_belanja,
+                'total' => $item->total
+            ];
+        });
 
-    // Data Pembiayaan (array objek)
-    $pembiayaan = Pembiayaan::select('kategori_pembiayaan', 'jumlah')->get();
+    // Fetch pembiayaan data for the selected year
+    $pembiayaan = Pembiayaan::whereYear('created_at', $year)
+        ->select('kategori_pembiayaan', 'jumlah')
+        ->get();
 
-    // Ambil data Pendapatan per tahun
-    $pendapatanYear = Pendapatan::select(DB::raw('YEAR(created_at) as year'), DB::raw('SUM(jumlah) as total'))
-        ->groupBy('year')
-        ->pluck('total', 'year'); // Format: [2024 => total, 2025 => total]
+    // Calculate totals for pendapatan and belanja
+    $totalPendapatan = $pendapatan->sum('total');
+    $totalBelanja = $belanja->sum('total');
 
-    // Ambil data Belanja per tahun
-    $belanjaYear = DB::table('belanja')
-        ->select(DB::raw('YEAR(created_at) as year'), DB::raw('SUM(jumlah) as total'))
-        ->groupBy('year')
-        ->pluck('total', 'year'); // Format: [2024 => total, 2025 => total]
-
-    // Data APBDes untuk tahun yang ditentukan
-    return view('pages.apbdes.index', compact('pendapatan', 'belanja', 'pembiayaan', 'years','belanjaYear','pendapatanYear'));
+    return response()->json([
+        'pendapatan' => [
+            'total' => $totalPendapatan,
+            'categories' => $pendapatan->pluck('kategori'),
+            'values' => $pendapatan->pluck('total')
+        ],
+        'belanja' => [
+            'total' => $totalBelanja,
+            'categories' => $belanja->pluck('kategori'),
+            'values' => $belanja->pluck('total')
+        ],
+        'pembiayaan' => [
+            'categories' => $pembiayaan->pluck('kategori_pembiayaan'),
+            'values' => $pembiayaan->pluck('jumlah'),
+            'penerimaan' => $pembiayaan->where('kategori_pembiayaan', 'Penerimaan')->sum('jumlah'),
+            'pengeluaran' => $pembiayaan->where('kategori_pembiayaan', 'Pengeluaran')->sum('jumlah')
+        ]
+    ]);
 }
-
 
 }

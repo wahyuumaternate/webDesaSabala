@@ -22,6 +22,7 @@ use App\Http\Controllers\infoKelurahanController;
 use App\Http\Controllers\JenisPelayananController;
 use App\Http\Controllers\MasyarakatController;
 use App\Http\Controllers\PelayananController;
+use App\Http\Controllers\PembiayaanController;
 use App\Http\Controllers\PemudaController;
 use App\Http\Controllers\PetaController;
 use Illuminate\Support\Facades\Route;
@@ -149,6 +150,8 @@ Route::prefix('administrator/dashboard')->middleware('auth:web')->group(function
     // apbdes
     Route::resource('pendapatan', PendapatanController::class);
     Route::resource('belanja', BelanjaController::class);
+    // routes/web.php
+    Route::resource('pembiayaan', PembiayaanController::class);
 
 });
 // end dashboard
@@ -198,7 +201,7 @@ Route::post('/pengaduan', [PengaduanController::class, 'store'])->name('pengadua
 Route::get('/reload', [PengaduanController::class, 'reload']);
 
 Route::get('/apbdes', [FrontendController::class, 'apbdes'])->name('apbdes');
-
+Route::get('/apbdes/data', [FrontendController::class, 'getDataByYear']);
 // profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile-user', [ProfileController::class, 'edit'])->name('profile.edit');

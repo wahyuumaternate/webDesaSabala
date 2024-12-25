@@ -21,9 +21,72 @@
 <section id="apbdes" class="blog">
     <div class="container" data-aos="fade-up">
         <h2 class="text-center" style="font-weight: bold;">APB Desa Sabala</h2>
-        <p class="text-center">Perbandingan Anggaran Pendapatan dan Belanja Desa Sabala Tahun 2022, 2023, dan 2024</p>
+        <p id="yearText" class="text-center">
+            Perbandingan Anggaran Pendapatan dan Belanja Desa Sabala Tahun {{ now()->year }}
+        </p>
 
-        <!-- Grafik All -->
+        <!-- Dropdown Year Selector -->
+        <div class="text-center">
+            <div class="d-flex justify-content-center">
+                <div class="col-4">
+                    <select id="yearSelect" class="form-select" aria-label="Pilih Tahun">
+                        <option selected value="">-- Pilih Tahun --</option>
+                        @foreach ($years as $year)
+                            <option value="{{ $year }}">{{ $year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pendapatan dan Belanja -->
+        <div class="row text-center mt-4">
+            <div class="col-md-6 mb-3">
+                <div class="box income">
+                    <p>Pendapatan</p>
+                    <p id="pendapatanText" class="highlight">
+                        {{ number_format(array_sum($pendapatanValuesByYear), 0, ',', '.') }}</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="box expense">
+                    <p>Belanja</p>
+                    <p id="belanjaText" class="highlight">
+                        {{ number_format(array_sum($belanjaValuesByYear), 0, ',', '.') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Penerimaan dan Pengeluaran -->
+        <div class="row text-center mt-4">
+            <div class="col-md-6 mb-3">
+                <div class="box financing">
+                    <p>Penerimaan</p>
+                    <p id="penerimaanText" class="highlight">
+                        {{ number_format($pembiayaan->where('kategori_pembiayaan', 'Penerimaan')->sum('jumlah'), 0, ',', '.') }}
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="box financing">
+                    <p>Pengeluaran</p>
+                    <p id="pengeluaranText" class="highlight">
+                        {{ number_format($pembiayaan->where('kategori_pembiayaan', 'Pengeluaran')->sum('jumlah'), 0, ',', '.') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Surplus/Defisit -->
+        <div class="text-center mt-4">
+            @php
+                $surplusDefisit = array_sum($pendapatanValuesByYear) - array_sum($belanjaValuesByYear);
+            @endphp
+            <p id="surplusDefisitText" class="highlight">Surplus/Defisit:
+                {{ number_format($surplusDefisit, 0, ',', '.') }}</p>
+        </div>
+
+        <!-- Grafik Pendapatan vs Belanja -->
         <div class="row justify-content-center mt-4 pt-4">
             <div class="col-12 col-lg-10">
                 <div id="all" class="echart-container"></div>
@@ -37,7 +100,7 @@
             </div>
         </div>
 
-        <!-- Grafik Belanja Desa -->
+        <!-- Grafik Belanja -->
         <div class="row justify-content-center mt-4 pt-4">
             <div class="col-12 col-lg-10">
                 <div id="belanjaChart" class="echart-container"></div>
@@ -52,422 +115,181 @@
         </div>
     </div>
 
-    <section id="apbdes" class="blog">
-        <div class="container" data-aos="fade-up">
-            <h2 class="text-center" style="font-weight: bold;">APB Desa Sabala</h2>
-            <p class="text-center">Perbandingan Anggaran Pendapatan dan Belanja Desa Sabala</p>
-
-            <!-- Dropdown untuk tahun -->
-            <div class="text-center mb-4">
-                <label for="yearSelect">Pilih Tahun:</label>
-                <select id="yearSelect" class="form-select" onchange="updateCharts()">
-                    @foreach ($years as $year)
-                        <option value="{{ $year }}">{{ $year }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <section id="apbdes" class="blog">
-                <div class="container" data-aos="fade-up">
-                    <h2 class="text-center" style="font-weight: bold;">APB Desa Sabala</h2>
-                    <p class="text-center">Perbandingan Anggaran Pendapatan dan Belanja Desa Sabala</p>
-
-                    <!-- Dropdown untuk tahun -->
-                    <div class="text-center mb-4">
-                        <label for="yearSelect">Pilih Tahun:</label>
-                        <select id="yearSelect" class="form-select" onchange="updateCharts()">
-                            @foreach ($years as $year)
-                                <option value="{{ $year }}">{{ $year }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Grafik All -->
-                    <div class="row justify-content-center mt-4 pt-4">
-                        <div class="col-12 col-lg-10">
-                            <div id="all" class="echart-container"></div>
-                        </div>
-                    </div>
-
-                    <!-- Grafik Pendapatan -->
-                    <div class="row justify-content-center mt-4 pt-4">
-                        <div class="col-12 col-lg-10">
-                            <div id="pendapatanChart" class="echart-container"></div>
-                        </div>
-                    </div>
-
-                    <!-- Grafik Belanja Desa -->
-                    <div class="row justify-content-center mt-4 pt-4">
-                        <div class="col-12 col-lg-10">
-                            <div id="belanjaChart" class="echart-container"></div>
-                        </div>
-                    </div>
-
-                    <!-- Grafik Pembiayaan -->
-                    <div class="row justify-content-center mt-4 pt-4">
-                        <div class="col-12 col-lg-10">
-                            <div id="pembiayaanChart" class="echart-container"></div>
-                        </div>
-                    </div>
-                </div>
-        </div>
-
-        <script>
-            let currentYear = @json($years[0]); // Set default year
-            const yearData = @json($data); // Data dari Controller
-
-            function updateCharts() {
-                const select = document.getElementById('yearSelect');
-                currentYear = select.value;
-
-                const pendapatanData = yearData.pendapatan[currentYear] || {};
-                const belanjaData = yearData.belanja[currentYear] || {};
-
-                renderAllChart();
-                renderPendapatanChart(pendapatanData);
-                renderBelanjaChart(belanjaData);
-            }
-
-            // Additional chart rendering functions would go here...
-
-            // Call updateCharts initially to load the default year charts
-            updateCharts();
-
-            function renderPendapatanChart(data) {
-                const categories = Object.keys(data);
-                const values = Object.values(data);
-
-                const chart = echarts.init(document.getElementById('pendapatanChart'));
-                chart.setOption({
-                    title: {
-                        text: `Pendapatan Desa Tahun ${currentYear}`,
-                        left: 'left'
-                    },
-                    tooltip: {
-                        trigger: 'axis'
-                    },
-                    xAxis: {
-                        type: 'category',
-                        data: categories
-                    },
-                    yAxis: {
-                        type: 'value',
-                        axisLabel: {
-                            formatter: '{value} Rp'
-                        }
-                    },
-                    series: [{
-                        name: 'Pendapatan Desa',
-                        type: 'bar',
-                        data: values,
-                        label: {
-                            show: true,
-                            position: 'top',
-                            formatter: function(params) {
-                                return new Intl.NumberFormat('id-ID', {
-                                    style: 'currency',
-                                    currency: 'IDR'
-                                }).format(params.value);
-                            }
-                        },
-                        itemStyle: {
-                            color: '#006BFF'
-                        }
-                    }]
-                });
-            }
-
-            function renderBelanjaChart(data) {
-                const categories = Object.keys(data);
-                const values = Object.values(data);
-
-                const chart = echarts.init(document.getElementById('belanjaChart'));
-                chart.setOption({
-                    title: {
-                        text: `Belanja Desa Tahun ${currentYear}`,
-                        left: 'left'
-                    },
-                    tooltip: {
-                        trigger: 'axis'
-                    },
-                    xAxis: {
-                        type: 'category',
-                        data: categories
-                    },
-                    yAxis: {
-                        type: 'value',
-                        axisLabel: {
-                            formatter: '{value} Rp'
-                        }
-                    },
-                    series: [{
-                        name: 'Belanja Desa',
-                        type: 'bar',
-                        data: values,
-                        label: {
-                            show: true,
-                            position: 'top',
-                            formatter: function(params) {
-                                return new Intl.NumberFormat('id-ID', {
-                                    style: 'currency',
-                                    currency: 'IDR'
-                                }).format(params.value);
-                            }
-                        },
-                        itemStyle: {
-                            color: '#006BFF'
-                        }
-                    }]
-                });
-            }
-        </script>
-    </section>
-    {{-- <!-- ECharts -->
+    <!-- ECharts Library -->
+    {{-- <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script> --}}
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const data = @json($data); // Data dari Controller
+            const yearSelect = document.getElementById('yearSelect');
+            const pendapatanText = document.getElementById('pendapatanText');
+            const belanjaText = document.getElementById('belanjaText');
+            const penerimaanText = document.getElementById('penerimaanText');
+            const pengeluaranText = document.getElementById('pengeluaranText');
+            const surplusDefisitText = document.getElementById('surplusDefisitText');
+            const yearText = document.getElementById('yearText'); // Target the paragraph for year text
+            // Yearly Data for Charts
+            const years = @json($years);
+            const pendapatanValuesByYear = @json($pendapatanValuesByYear);
+            const belanjaValuesByYear = @json($belanjaValuesByYear);
 
-            const years = Object.keys(data.pendapatan);
-            const pendapatanValues = Object.values(data.pendapatan);
-            const belanjaValues = Object.values(data.belanja);
-
-            function renderAllChart() {
+            // Define Chart Rendering Functions First
+            const renderYearlyChart = () => {
                 const chart = echarts.init(document.getElementById('all'));
                 chart.setOption({
                     title: {
-                        text: 'Pendapatan dan Belanja Desa dari Tahun ke Tahun',
-                        left: 'left'
+                        text: 'Pendapatan vs Belanja Per Tahun',
+                        left: 'center'
                     },
                     tooltip: {
                         trigger: 'axis'
                     },
                     legend: {
                         data: ['Pendapatan', 'Belanja'],
-                        bottom: '5%'
+                        bottom: 10
                     },
                     xAxis: {
                         type: 'category',
-                        data: years,
-                        axisLabel: {
-                            rotate: 45
-                        }
+                        data: years
                     },
                     yAxis: {
-                        type: 'value',
-                        axisLabel: {
-                            formatter: '{value} Rp'
-                        }
+                        type: 'value'
                     },
                     series: [{
                             name: 'Pendapatan',
                             type: 'bar',
-                            data: pendapatanValues,
-                            color: '#006BFF'
+                            data: pendapatanValuesByYear,
+                            itemStyle: {
+                                color: '#006BFF'
+                            }
                         },
                         {
                             name: 'Belanja',
                             type: 'bar',
-                            data: belanjaValues,
-                            color: '#08C2FF'
+                            data: belanjaValuesByYear,
+                            itemStyle: {
+                                color: '#FF4500'
+                            }
                         }
                     ]
                 });
-                window.addEventListener('resize', chart.resize);
-            }
+            };
 
-            function renderPendapatanChart() {
-                const pendapatanData = @json($pendapatan); // Data Pendapatan Desa 2024
-                const categories = Object.keys(pendapatanData);
-                const values = Object.values(pendapatanData);
-
-                const chart = echarts.init(document.getElementById('pendapatanChart'));
+            const renderChart = (id, title, categories, values, color) => {
+                const chart = echarts.init(document.getElementById(id));
                 chart.setOption({
                     title: {
-                        text: 'Pendapatan Desa 2024',
-                        left: 'left'
+                        text: title,
+                        left: 'center'
                     },
                     tooltip: {
-                        trigger: 'axis'
+                        trigger: 'item'
                     },
                     xAxis: {
                         type: 'category',
                         data: categories
                     },
                     yAxis: {
-                        type: 'value',
-                        axisLabel: {
-                            formatter: '{value} Rp'
-                        }
+                        type: 'value'
                     },
                     series: [{
-                        name: 'Pendapatan Desa',
                         type: 'bar',
                         data: values,
-                        label: {
-                            show: true,
-                            position: 'top',
-                            formatter: function(params) {
-                                return new Intl.NumberFormat('id-ID', {
-                                    style: 'currency',
-                                    currency: 'IDR'
-                                }).format(params.value);
-                            }
-                        },
                         itemStyle: {
-                            color: '#006BFF'
-                        },
-                        barWidth: '50%'
+                            color
+                        }
                     }]
                 });
-                window.addEventListener('resize', chart.resize);
-            }
+            };
 
-            renderAllChart();
-            renderPendapatanChart();
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const belanjaData = @json($belanja); // Data Belanja Desa dari Controller
-            const categories = Object.keys(belanjaData); // Kategori Belanja Desa
-            const values = Object.values(belanjaData); // Nilai Belanja Desa
+            // Render Initial Charts
+            renderYearlyChart();
+            renderChart('pendapatanChart', 'Pendapatan Desa Berdasarkan Kategori', @json($pendapatan->keys()),
+                @json($pendapatan->values()), '#006BFF');
+            renderChart('belanjaChart', 'Belanja Desa Berdasarkan Kategori', @json($belanja->keys()),
+                @json($belanja->values()), '#FF4500');
+            renderChart('pembiayaanChart', 'Pembiayaan Desa Berdasarkan Kategori', @json($pembiayaan->pluck('kategori_pembiayaan')),
+                @json($pembiayaan->pluck('jumlah')), '#1976D2');
 
-            // Inisialisasi ECharts
-            const chart = echarts.init(document.getElementById('belanjaChart'));
+            // Event Listener for Year Selection
+            yearSelect.addEventListener('change', (event) => {
+                const selectedYear = event.target.value;
+                // Update year text dynamically
+                yearText.textContent =
+                    `Perbandingan Anggaran Pendapatan dan Belanja Desa Sabala Tahun ${selectedYear}`;
 
-            // Opsi Grafik
-            chart.setOption({
-                title: {
-                    text: 'Belanja Desa Tahun 2024',
-                    left: 'left',
-                    textStyle: {
-                        fontWeight: 'bold',
-                        fontSize: 18
-                    }
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'shadow' // Highlight shadow pada batang
-                    }
-                },
-                xAxis: {
-                    type: 'category',
-                    data: categories,
-                    axisLabel: {
-                        rotate: 25, // Rotasi label agar tidak tumpang tindih
-                        fontSize: 12
-                    }
-                },
-                yAxis: {
-                    type: 'value',
-                    axisLabel: {
-                        formatter: '{value} Rp'
-                    }
-                },
-                series: [{
-                    name: 'Belanja Desa',
-                    type: 'bar',
-                    data: values,
-                    label: {
-                        show: true,
-                        position: 'top',
-                        formatter: function(params) {
-                            return new Intl.NumberFormat('id-ID', {
-                                style: 'currency',
-                                currency: 'IDR'
-                            }).format(params.value);
-                        }
-                    },
-                    itemStyle: {
-                        color: '#006BFF' // Warna merah muda batang
-                    },
-                    barWidth: '50%' // Ukuran batang
-                }]
+                // Fetch data for the selected year
+                fetch(`/apbdes/data?year=${selectedYear}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const {
+                            pendapatan,
+                            belanja,
+                            pembiayaan
+                        } = data;
+                        const surplusDefisit = pendapatan.total - belanja.total;
+
+                        // Update texts
+                        pendapatanText.textContent = new Intl.NumberFormat('id-ID', {
+                            style: 'currency',
+                            currency: 'IDR'
+                        }).format(pendapatan.total);
+                        belanjaText.textContent = new Intl.NumberFormat('id-ID', {
+                            style: 'currency',
+                            currency: 'IDR'
+                        }).format(belanja.total);
+                        penerimaanText.textContent = new Intl.NumberFormat('id-ID', {
+                            style: 'currency',
+                            currency: 'IDR'
+                        }).format(pembiayaan.penerimaan);
+                        pengeluaranText.textContent = new Intl.NumberFormat('id-ID', {
+                            style: 'currency',
+                            currency: 'IDR'
+                        }).format(pembiayaan.pengeluaran);
+                        surplusDefisitText.textContent =
+                            `Surplus/Defisit: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(surplusDefisit)}`;
+
+                        // Update charts
+                        renderChart('pendapatanChart', 'Pendapatan Desa Berdasarkan Kategori',
+                            pendapatan.categories, pendapatan.values, '#006BFF');
+                        renderChart('belanjaChart', 'Belanja Desa Berdasarkan Kategori', belanja
+                            .categories, belanja.values, '#FF4500');
+                        renderChart('pembiayaanChart', 'Pembiayaan Desa Berdasarkan Kategori',
+                            pembiayaan.categories, pembiayaan.values, '#1976D2');
+                    });
             });
-
-            // Responsif untuk resize layar
-            window.addEventListener('resize', chart.resize);
         });
     </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const pembiayaanData = @json($pembiayaanData); // Data Pembiayaan dari Controller
-            const categories = Object.keys(pembiayaanData); // Penerimaan dan Pengeluaran
-            const values = Object.values(pembiayaanData); // Nilai masing-masing kategori
-
-            // Inisialisasi ECharts
-            const chart = echarts.init(document.getElementById('pembiayaanChart'));
-
-            // Opsi Grafik
-            chart.setOption({
-                title: {
-                    text: 'Pembiayaan Desa Tahun 2024',
-                    left: 'left',
-                    textStyle: {
-                        fontWeight: 'bold',
-                        fontSize: 18
-                    }
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'shadow' // Highlight shadow pada batang
-                    }
-                },
-                xAxis: {
-                    type: 'category',
-                    data: categories,
-                    axisLabel: {
-                        fontSize: 12
-                    }
-                },
-                yAxis: {
-                    type: 'value',
-                    axisLabel: {
-                        formatter: '{value} Rp'
-                    }
-                },
-                series: [{
-                    name: 'Pembiayaan Desa',
-                    type: 'bar',
-                    data: values,
-                    label: {
-                        show: true,
-                        position: 'top',
-                        formatter: function(params) {
-                            return new Intl.NumberFormat('id-ID', {
-                                style: 'currency',
-                                currency: 'IDR'
-                            }).format(params.value);
-                        }
-                    },
-                    itemStyle: {
-                        color: '#006BFF' // Warna merah batang
-                    },
-                    barWidth: '50%' // Ukuran batang
-                }]
-            });
-
-            // Responsif untuk resize layar
-            window.addEventListener('resize', chart.resize);
-        });
-    </script> --}}
     <style>
         .echart-container {
             width: 100%;
             height: 400px;
         }
 
-        @media (max-width: 768px) {
-            .echart-container {
-                height: 300px;
-                /* Tinggi lebih kecil untuk layar kecil */
-            }
+        .highlight {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .box {
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .income {
+            color: #388e3c;
+        }
+
+        .expense {
+            color: #d32f2f;
+        }
+
+        .financing {
+            color: #1976d2;
         }
     </style>
-</section><!-- End APBDes Section -->
+</section>
 
 @include('layouts.footer')
 @endsection

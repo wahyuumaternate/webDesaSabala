@@ -1,14 +1,14 @@
-@extends('admin.layouts.main', ['title' => 'Pendapatan'])
+@extends('admin.layouts.main', ['title' => 'Pembiayaan'])
 @section('headerside')
     @include('admin.layouts.header')
     @include('admin.layouts.sidebar')
 @endsection
 @section('content')
-    {{-- Pendapatan --}}
+    {{-- Pembiayaan --}}
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-12">
-                <h2 class="mb-2 page-title">Pendapatan Desa</h2>
+                <h2 class="mb-2 page-title">Pembiayaan Desa</h2>
                 <div class="row my-4">
                     <!-- Small table -->
                     <div class="col-md-12">
@@ -16,38 +16,34 @@
                             <div class="card-body">
                                 <div class="card-header">
                                     <button type="button" class="btn mb-2 btn-primary" data-toggle="modal"
-                                        data-target="#pendapatanModal"> <i class="fe fe-file-plus fe-16"></i>
-                                        Tambah Pendapatan </button>
+                                        data-target="#pembiayaanModal"> <i class="fe fe-file-plus fe-16"></i>
+                                        Tambah Pembiayaan </button>
                                     <!-- Modal -->
-                                    <div class="modal fade" id="pendapatanModal" tabindex="-1" role="dialog"
-                                        aria-labelledby="pendapatanModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="pembiayaanModal" tabindex="-1" role="dialog"
+                                        aria-labelledby="pembiayaanModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="pendapatanModalLabel">Tambah Pendapatan</h5>
+                                                    <h5 class="modal-title" id="pembiayaanModalLabel">Tambah Pembiayaan</h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-                                                <form action="{{ route('pendapatan.store') }}" method="POST"
-                                                    id="pendapatanForm">
+                                                <form action="{{ route('pembiayaan.store') }}" method="POST"
+                                                    id="pembiayaanForm">
                                                     @csrf
                                                     <div class="modal-body">
                                                         <div class="form-group">
-                                                            <label for="kategori_pendapatan">Kategori Pendapatan</label>
+                                                            <label for="kategori_pembiayaan">Kategori Pembiayaan</label>
                                                             <select
-                                                                class="form-control @error('kategori_pendapatan') is-invalid @enderror"
-                                                                id="kategori_pendapatan" name="kategori_pendapatan"
+                                                                class="form-control @error('kategori_pembiayaan') is-invalid @enderror"
+                                                                id="kategori_pembiayaan" name="kategori_pembiayaan"
                                                                 required>
-                                                                <option value="Pendapatan Asli Desa">Pendapatan Asli Desa
-                                                                </option>
-                                                                <option value="Pendapatan Transfer">Pendapatan Transfer
-                                                                </option>
-                                                                <option value="Pendapatan Lain-lain">Pendapatan Lain-lain
-                                                                </option>
+                                                                <option value="Penerimaan">Penerimaan</option>
+                                                                <option value="Pengeluaran">Pengeluaran</option>
                                                             </select>
-                                                            @error('kategori_pendapatan')
+                                                            @error('kategori_pembiayaan')
                                                                 <span class="invalid-feedback" role="alert">
                                                                     <strong class="text-danger">{{ $message }}</strong>
                                                                 </span>
@@ -91,26 +87,26 @@
                                     <thead>
                                         <tr>
                                             <th><strong>#</strong></th>
-                                            <th><strong>Kategori Pendapatan</strong></th>
+                                            <th><strong>Kategori Pembiayaan</strong></th>
                                             <th><strong>Jumlah</strong></th>
                                             <th><strong>Uraian</strong></th>
                                             <th><strong>Action</strong></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($pendapatan as $item)
+                                        @foreach ($pembiayaan as $item)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $item->kategori_pendapatan }}</td>
+                                                <td>{{ $item->kategori_pembiayaan }}</td>
                                                 <td>Rp. {{ number_format($item->jumlah, 2, ',', '.') }}</td>
                                                 <td>{{ $item->uraian }}</td>
                                                 <td>
                                                     <form class="d-flex" method="POST"
-                                                        action="{{ route('pendapatan.destroy', $item->id) }}">
+                                                        action="{{ route('pembiayaan.destroy', $item->id) }}">
                                                         @csrf
                                                         @method('delete')
                                                         <button class="btn btn-danger"
-                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus kategori pendapatan ini?');event.preventDefault();">
+                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus kategori pembiayaan ini?');event.preventDefault();">
                                                             <i class="fe fe-trash-2"></i> Hapus
                                                         </button>
                                                     </form>
@@ -126,11 +122,10 @@
             </div> <!-- .col-12 -->
         </div> <!-- .row -->
     </div> <!-- .container-fluid -->
-    {{-- end Pendapatan --}}
+    {{-- end Pembiayaan --}}
 @endsection
 @section('scrip')
     <script>
-        // Fungsi untuk memformat input menjadi format Rupiah
         function formatRupiah(input) {
             let number_string = input.value.replace(/[^,\d]/g, '').toString();
             let split = number_string.split(',');
@@ -148,18 +143,15 @@
             input.value = 'Rp ' + rupiah;
         }
 
-        // Fungsi untuk menghapus simbol 'Rp', titik ribuan, dan spasi ekstra
         function unformatRupiah(input) {
-            let value = input.value.trim(); // Menghapus spasi tambahan
-            // Menghilangkan simbol 'Rp' dan titik ribuan
+            let value = input.value.trim();
             value = value.replace(/[^\d,-]/g, '');
             input.value = value;
         }
 
-        // Handle form submission to unformat the 'jumlah' before submission
-        document.getElementById('pendapatanForm').addEventListener('submit', function(event) {
+        document.getElementById('pembiayaanForm').addEventListener('submit', function(event) {
             const jumlahInput = document.getElementById('jumlah');
-            unformatRupiah(jumlahInput); // Unformat before submitting
+            unformatRupiah(jumlahInput);
         });
     </script>
 @endsection
