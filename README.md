@@ -11,9 +11,10 @@ Tongkrongan IT adalah sebuah komunitas yang didedikasikan untuk para profesional
 - Forum untuk tanya jawab dan berbagi pengalaman
 - Sumber daya dan materi pembelajaran yang berguna
 
+## Hak Cipta
 Proyek ini tidak menerima kontribusi eksternal. Semua sumber daya dan konten yang ada dalam repositori ini adalah milik Tongkrongan IT dan tidak boleh diubah, disebarluaskan, atau digunakan tanpa izin resmi.
 
-Lisensi
+## Lisensi
 Dokumen ini dan semua konten di dalamnya dilindungi oleh hak cipta.
 © 2023 Tongkrongan IT. Semua hak dilindungi.
 
