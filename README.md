@@ -28,8 +28,10 @@ Terima kasih telah mengunjungi Tongkrongan IT!
 Untuk bergabung dan memanfaatkan semua fitur yang kami tawarkan, Anda dapat mengunjungi situs resmi kami dan melakukan pendaftaran.
 
 ```bash
-git clone https://github.com/username/tongkrongan-it.git
-cd tongkrongan-it
+gh repo clone wahyuumaternate/webDesaSabala
+cd webDesaSabala
+php artisan storage:link
+composer install
 npm install
 npm start
-
+php artisan serve
