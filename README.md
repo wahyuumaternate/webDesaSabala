@@ -5,12 +5,6 @@
 ## Deskripsi
 Tongkrongan IT adalah sebuah komunitas yang didedikasikan untuk para profesional dan penggemar teknologi informasi. Kami menyediakan platform untuk berbagi ilmu, pengalaman, dan menjalin jaringan antar sesama anggota di bidang IT.
 
-## Fitur
-- Diskusi dan berbagi pengetahuan tentang teknologi terbaru
-- Webinar dan workshop bulanan
-- Forum untuk tanya jawab dan berbagi pengalaman
-- Sumber daya dan materi pembelajaran yang berguna
-
 ## Hak Cipta
 Proyek ini tidak menerima kontribusi eksternal. Semua sumber daya dan konten yang ada dalam repositori ini adalah milik Tongkrongan IT dan tidak boleh diubah, disebarluaskan, atau digunakan tanpa izin resmi.
 
